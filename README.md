@@ -92,7 +92,7 @@ feed-generator ──gRPC client-stream──> ingestion ──> PostgreSQL
 | id | UUID | Первичный ключ |
 | title | string | Заголовок, до 200 символов |
 | description | string | Описание, до 4000 символов |
-| price | int64 | Цена в копейках (не float — деньги) |
+| price | int64 | Цена в целых рублях (не float — деньги) |
 | category_id | int | Категория |
 | city_id | int | Город |
 | lat, lon | float64 | Координаты (nullable) |
@@ -196,7 +196,7 @@ message StreamAdsResponse {
 {
   "id": "uuid",
   "title": "iPhone 13 Pro",
-  "price": 5500000,
+  "price": 55000,
   "category_id": 12,
   "city_id": 55,
   "created_at": "2026-07-16T10:00:00Z"
@@ -212,7 +212,7 @@ message StreamAdsResponse {
   "filter_id": "uuid",
   "ad_id": "uuid",
   "ad_title": "iPhone 13 Pro",
-  "ad_price": 5500000
+  "ad_price": 55000
 }
 ```
 
@@ -254,7 +254,7 @@ GET    /api/v1/ws                — WebSocket upgrade (JWT в query)
     "match_id": "uuid",
     "filter_id": "uuid",
     "ad_title": "iPhone 13 Pro",
-    "ad_price": 5500000
+    "ad_price": 55000
   }
 }
 ```
@@ -395,7 +395,7 @@ Prometheus, pprof, бенчмарки, нагрузочный прогон. По
 | matcher отдельным сервисом | Разный профиль нагрузки: ingestion упирается в I/O, matcher в CPU | Дополнительная сетевая задержка |
 | Redis Pub/Sub вместо прямого вызова | ingestion не ждёт matcher и не падает вместе с ним | Нет гарантии доставки |
 | Кэш фильтров в памяти matcher | На каждое объявление нужен полный перебор фильтров — запрос в БД убил бы latency | Инвалидация через `filter.changed`, рассинхрон при рестарте |
-| Цена в int64 (копейки) | Деньги нельзя во float | Нужна конвертация на границе API |
+| Цена в int64 (целые рубли) | Деньги нельзя во float; копейки не нужны, маркетплейс показывает целые рубли | Дробные суммы или другие валюты потребуют сменить единицу хранения |
 | `net/http` вместо Gin в gateway | Понимать, что фреймворк делает под капотом | Больше кода на роутинг |
 | PostgreSQL вместо SQLite | Реальный пул соединений, прод-подобное поведение | Тяжелее локальный запуск |
 | Монорепа без submodules | Один разработчик, один контракт — submodules дают только оверхед на синхронизацию | При росте до нескольких команд контракт пришлось бы выносить |

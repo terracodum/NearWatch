@@ -11,7 +11,7 @@
 | id | `uuid` | PK, дефолт `gen_random_uuid()` |
 | title | `varchar(200)` | `NOT NULL` |
 | description | `varchar(4000)` | `NOT NULL` |
-| price | `bigint` | `NOT NULL`, копейки, не отрицательная |
+| price | `bigint` | `NOT NULL`, целые рубли, не отрицательная |
 | category_id | `integer` | `NOT NULL` |
 | city_id | `integer` | `NOT NULL` |
 | lat, lon | `double precision` | nullable |

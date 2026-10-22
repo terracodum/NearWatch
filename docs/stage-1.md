@@ -25,7 +25,7 @@ docker compose up --build
 curl -X POST localhost:8080/ads -H 'Content-Type: application/json' -d '{
   "title": "iPhone 13 Pro",
   "description": "Состояние отличное",
-  "price": 5500000,
+  "price": 55000,
   "category_id": 12,
   "city_id": 55
 }'
